@@ -6,9 +6,9 @@ from googleapiclient.discovery import build
 
 import isodate
 
-
 # YT_API_KEY скопирован из гугла и вставлен в переменные окружения
-api_key: str = os.getenv('YT_API_KEY')
+api_key: str = os.getenv("YT_API_KEY")
+print(api_key)
 
 # создать специальный объект для работы с API
 youtube = build('youtube', 'v3', developerKey=api_key)
@@ -20,7 +20,8 @@ def printj(dict_to_print: dict) -> None:
 
 
 '''
-получить данные о канале по его id
+получить данные о канале по его idx
+
 docs: https://developers.google.com/youtube/v3/docs/channels/list
 
 сервис для быстрого получения id канала: https://commentpicker.com/youtube-channel-id.php
@@ -30,7 +31,6 @@ channel_id = 'UC1eFXmJNkjITxPFWTy6RsWg'  # Редакция
 channel = youtube.channels().list(id=channel_id, part='snippet,statistics').execute()
 printj(channel)
 
-
 '''
 получить данные по play-листам канала
 docs: https://developers.google.com/youtube/v3/docs/playlists/list
@@ -39,11 +39,10 @@ playlists = youtube.playlists().list(channelId=channel_id,
                                      part='contentDetails,snippet',
                                      maxResults=50,
                                      ).execute()
-# printj(playlists)
+print(playlists)
 for playlist in playlists['items']:
     print(playlist)
     print()
-
 
 '''
 получить данные по видеороликам в плейлисте
@@ -53,18 +52,17 @@ docs: https://developers.google.com/youtube/v3/docs/playlistItems/list
 https://www.youtube.com/playlist?list=PLguYHBi01DWr4bRWc4uaguASmo7lW4GCb
 или из ответа API: см. playlists выше
 '''
-# playlist_id = 'PLguYHBi01DWrlpOkXwOYe8qjGFyqobcoO'
+playlist_id = 'PLguYHBi01DWrlpOkXwOYe8qjGFyqobcoO'
 playlist_id = 'PLguYHBi01DWr4bRWc4uaguASmo7lW4GCb'
 playlist_videos = youtube.playlistItems().list(playlistId=playlist_id,
                                                part='contentDetails',
                                                maxResults=50,
                                                ).execute()
-# printj(playlist_videos)
+printj(playlist_videos)
 
 # получить все id видеороликов из плейлиста
 video_ids: list[str] = [video['contentDetails']['videoId'] for video in playlist_videos['items']]
-# print(video_ids)
-
+print(video_ids)
 
 '''
 вывести длительности видеороликов из плейлиста
@@ -80,7 +78,6 @@ for video in video_response['items']:
     iso_8601_duration = video['contentDetails']['duration']
     duration = isodate.parse_duration(iso_8601_duration)
     print(duration)
-
 
 '''
 получить статистику видео по его id
