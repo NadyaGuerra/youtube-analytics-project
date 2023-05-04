@@ -16,14 +16,17 @@ class Video:
         self.view_count = self.__video['items'][0]['statistics']['viewCount']
         self.like_count = self.__video['items'][0]['statistics']['likeCount']
 
+    def __str__(self):
+        return self.__title
+    @property
+    def url(self) -> str:
+        return self.__url
 
-@property
-def url(self):
-    return self.__url
+    @property
+    def title(self):
+        return self.__title
 
-@property
-def title(self):
-    return self.__title
+
 
 
 class PLVideo(Video):
@@ -31,6 +34,6 @@ class PLVideo(Video):
         super().__init__(video_id)
         self.__playlist_id = playlist_id
 
-@property
-def playlist_id(self):
-    return self.__playlist_id
+    @property
+    def playlist_id(self):
+        return self.__playlist_id
