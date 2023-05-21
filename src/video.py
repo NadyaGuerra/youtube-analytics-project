@@ -7,14 +7,22 @@ class Video:
     youtube = build('youtube', 'v3', developerKey=api_key)
 
     def __init__(self, video_id):
-        self.__video_id = video_id
-        self.__video = self.youtube.videos().list(part='snippet,statistics,contentDetails,topicDetails',
+        try:
+            self.__video_id = video_id
+            self.__video = self.youtube.videos().list(part='snippet,statistics,contentDetails,topicDetails',
                                                 id=self.__video_id).execute()
-        self.__title = self.__video['items'][0]['snippet']['title']
-        self.__url = f'https://youtu.be/{self.__video_id}'
+            self.__title = self.__video['items'][0]['snippet']['title']
+            self.__url = f'https://youtu.be/{self.__video_id}'
         #self.__url = f'https://www.youtube.com/watch?v={self.__video_id}'
-        self.view_count = self.__video['items'][0]['statistics']['viewCount']
-        self.like_count = self.__video['items'][0]['statistics']['likeCount']
+            self.view_count = self.__video['items'][0]['statistics']['viewCount']
+            self.like_count = self.__video['items'][0]['statistics']['likeCount']
+        except Exception:
+            self.video_id = video_id
+            print(f"Видео с id {self.video_id} не найдено")
+            self.__title = None
+            self.__url = None
+            self.view_count = None
+            self.like_count = None
 
     def __str__(self):
         return self.__title
